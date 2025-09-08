@@ -1,46 +1,47 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AddForm from "./AddForm";
-import { useDispatch } from "react-redux";
-import { deleteTodo } from "../features/todo/todoSlice";
-import { markAsDone } from "../features/todo/todoSlice";
+import { deleteTodo, markAsDone } from "../features/todo/todoSlice";
 
 export default function Todo() {
   const todos = useSelector((state) => state.todos);
-  console.log(todos);
   const dispatch = useDispatch();
 
   const clickHandler = (id) => {
-    console.log("clicked", id);
     dispatch(deleteTodo(id));
   };
 
   const markAsDoneHandler = (id) => {
-    console.log("clicked", id);
     dispatch(markAsDone(id));
   };
 
   return (
-    <>
+    <div className="todo-app">
+      <h1>My To-Do List 📝</h1>
       <AddForm />
-      <h2>Todo List</h2>
-      <ul>
+      <h2>Tasks</h2>
+      <ul className="todo-list">
         {todos.map((todo) => (
-          <li key={todo.id}>
+          <li key={todo.id} className="todo-item">
             <span
-              style={{ textDecoration: todo.isDone ? "line-through" : "none" }}
+              className={`task-text ${todo.isDone ? "completed" : ""}`}
             >
               {todo.task}
             </span>
-            &nbsp; &nbsp;
-            <button onClick={() => clickHandler(todo.id)}>Delete</button>
-            &nbsp; &nbsp;
-            <button onClick={() => markAsDoneHandler(todo.id)}>
-              {todo.isDone ? "Undo" : "Mark As Done"}
+            <button
+              onClick={() => markAsDoneHandler(todo.id)}
+              className={`action-btn ${todo.isDone ? "undo-btn" : "mark-btn"}`}
+            >
+              {todo.isDone ? "Undo" : "Done"}
             </button>
-            <hr />
+            <button
+              onClick={() => clickHandler(todo.id)}
+              className="action-btn delete-btn"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
